@@ -7,5 +7,5 @@ node['rsyslog']['remotes'].each do |name, url|
 end
 
 service 'rsyslog' do
-  action :reload
+  action :restart
 end
