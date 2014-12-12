@@ -1,0 +1,11 @@
+maintainer       'Sean Callan'
+maintainer_email 'sean@cityleash.com'
+license          'MIT'
+description      'Configure and deploy Sidekiq on AWS OpsWorks.'
+
+name   'sidekiq'
+recipe 'sidekiq::setup',     'Set up sidekiq worker.'
+recipe 'sidekiq::configure', 'Configure sidekiq worker.'
+recipe 'sidekiq::deploy',    'Deploy sidekiq worker.'
+recipe 'sidekiq::undeploy',  'Undeploy sidekiq worker.'
+recipe 'sidekiq::stop',      'Stop sidekiq worker.'

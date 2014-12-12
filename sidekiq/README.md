@@ -1,10 +1,4 @@
-[opsworks_sidekiq](https://github.com/drakerlabs/opsworks_sidekiq)
-====================
-
-This cookbook sets up an [AWS OpsWorks](http://aws.amazon.com/opsworks/) instance to run [sidekiq](http://sidekiq.org/) for a Rails application.
-
-Adapted from Joey Aghion's [opsworks_delayed_job](https://github.com/joeyAghion/opsworks_delayed_job).
-
+Setup and run [Sidekiq](http://sidekiq.org/) on [AWS OpsWorks](http://aws.amazon.com/opsworks/).  Originally forked from Draker Labs' [opsworks_sidekiq](https://github.com/drakerlabs/opsworks_sidekiq).
 
 This cookbook uses monit to manage 1 or more Sidekiq *processes* per machine, each with a customized concurrency level. This recipe is heavily integrated into the opsworks rails recipes.
 
@@ -96,11 +90,11 @@ OpsWorks Set-Up
 
 The layer's custom chef recipes should be associated with events as follows:
 
-* **Setup**: `opsworks_sidekiq::setup`
-* **Configure**: `opsworks_sidekiq::configure`
-* **Deploy**: `opsworks_sidekiq::deploy`
-* **Undeploy**: `opsworks_sidekiq::undeploy`
-* **Shutdown**: `opsworks_sidekiq::stop`
+* **Setup**: `sidekiq::setup`
+* **Configure**: `sidekiq::configure`
+* **Deploy**: `sidekiq::deploy`
+* **Undeploy**: `sidekiq::undeploy`
+* **Shutdown**: `sidekiq::stop`
 
 
 Logging
@@ -124,6 +118,3 @@ License
 -------
 
 See [LICENSE](LICENSE).
-
-Adaption to opsworks_sidekiq  &copy; 2013 Draker Inc.
-Original opsworks_delayed_job &copy; 2013 Joey Aghion, Artsy Inc.
