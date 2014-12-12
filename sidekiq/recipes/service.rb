@@ -1,8 +1,7 @@
 service 'monit' do
-  supports :status => false, :restart => true, :reload => true
+  supports status: false, restart: true, reload: true, unmonitor: true
   action :nothing
 end
-
 
 node[:deploy].each do |application, deploy|
   unless node[:sidekiq][application]
@@ -11,8 +10,7 @@ node[:deploy].each do |application, deploy|
   end
 
   execute "restart Rails app #{application}" do
-    command "sleep 60 && #{node[:sidekiq][application][:restart_command]}"
+    command node[:sidekiq][application][:restart_command]
     action :nothing
   end
-
 end

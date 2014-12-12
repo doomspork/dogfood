@@ -6,6 +6,8 @@ node[:deploy].each do |application, deploy|
     next
   end
 
+  include_recipe 'sidekiq::quiet'
+
   execute "stop Sidekiq [#{application}]" do
     command "sudo monit stop -g sidekiq_#{application}_group"
   end

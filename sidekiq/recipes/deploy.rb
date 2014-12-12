@@ -12,6 +12,8 @@ node[:deploy].each do |application, deploy|
     path deploy[:deploy_to]
   end
 
+  include_recipe 'sidekiq::quiet'
+  include_recipe 'sidekiq::unmonitor'
   include_recipe 'sidekiq::setup'
 
   node.set[:opsworks][:rails_stack][:restart_command] = node[:sidekiq][application][:restart_command]
@@ -20,4 +22,6 @@ node[:deploy].each do |application, deploy|
     deploy_data deploy
     app application
   end
+
+  include_recipe 'sidekiq::restart'
 end

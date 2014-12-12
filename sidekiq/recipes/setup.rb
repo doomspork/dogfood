@@ -26,7 +26,7 @@ node[:deploy].each do |application, deploy|
 
   config_directory = "#{deploy[:deploy_to]}/shared/config"
 
-  unless workers.empty?
+  unless (workers = workers(application)).empty?
     workers.each do |worker, options|
 
       # Convert attribute classes to plain old ruby objects
