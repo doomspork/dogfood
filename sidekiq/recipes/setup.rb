@@ -27,6 +27,9 @@ node[:deploy].each do |application, deploy|
   config_directory = "#{deploy[:deploy_to]}/shared/config"
 
   unless (workers = workers(application)).empty?
+    # Stop any processes that might be running before we setup
+    include_recipe 'sidekiq::stop'
+
     workers.each do |worker, options|
 
       # Convert attribute classes to plain old ruby objects
