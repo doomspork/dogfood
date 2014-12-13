@@ -1,11 +1,8 @@
-# Adapted from deploy::rails: https://github.com/aws/opsworks-cookbooks/blob/master/deploy/recipes/rails.rb
-
 include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
-
-  if deploy[:application_type] != 'rails'
-    Chef::Log.debug("Skipping opsworks_sidekiq::deploy application #{application} as it is not an Rails app")
+  unless node[:sidekiq][application]
+    Chef::Log.debug("Skipping sidekiq::setup for #{application}, not configured for Sidekiq.")
     next
   end
 
@@ -15,7 +12,9 @@ node[:deploy].each do |application, deploy|
     path deploy[:deploy_to]
   end
 
-  include_recipe "opsworks_sidekiq::setup"
+  include_recipe 'sidekiq::quiet'
+  include_recipe 'sidekiq::unmonitor'
+  include_recipe 'sidekiq::setup'
 
   node.set[:opsworks][:rails_stack][:restart_command] = node[:sidekiq][application][:restart_command]
 
@@ -23,4 +22,6 @@ node[:deploy].each do |application, deploy|
     deploy_data deploy
     app application
   end
+
+  include_recipe 'sidekiq::restart'
 end

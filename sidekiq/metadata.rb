@@ -1,0 +1,15 @@
+maintainer       'Sean Callan'
+maintainer_email 'sean@cityleash.com'
+license          'MIT'
+description      'Configure and deploy Sidekiq 3 on AWS OpsWorks.'
+
+name   'sidekiq'
+recipe 'sidekiq::configure',  'Configure Sidekiq worker.'
+recipe 'sidekiq::deploy',     'Deploy Sidekiq worker.'
+recipe 'sidekiq::quiet',      'Stop accepting new work.'
+recipe 'sidekiq::restart',    'Restart Sidekiq workers and begin accepting work.'
+recipe 'sidekiq::setup',      'Set up Sidekiq worker.'
+recipe 'sidekiq::stop',       'Stop Sidekiq worker.'
+recipe 'sidekiq::undeploy',   'Undeploy Sidekiq worker.'
+recipe 'sidekiq::unmonitor',  'Unmonitor Sidekiq processes in monit.'
+
