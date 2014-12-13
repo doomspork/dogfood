@@ -56,7 +56,7 @@ node[:deploy].each do |application, deploy|
         syslog:       node[:sidekiq][application][:syslog],
         workers:      workers
       })
-      notifies :reload, 'service[monit]', :immediately
+      notifies :reload, 'service[monit]', :delayed
     end
 
   end
