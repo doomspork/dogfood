@@ -2,8 +2,9 @@ include_recipe 'sidekiq::service'
 
 # setup sidekiq service per app
 node[:deploy].each do |application, deploy|
-  unless node[:sidekiq][application]
-    Chef::Log.debug("Skipping opsworks_sidekiq::setup for #{application}, not configured for Sidekiq.")
+  Chef::Log.info(node[:sidekiq].inspect)
+  if node[:sidekiq][application]
+    Chef::Log.info("Skipping opsworks_sidekiq::setup for #{application}, not configured for Sidekiq.")
     next
   end
 
@@ -27,6 +28,7 @@ node[:deploy].each do |application, deploy|
   config_directory = "#{deploy[:deploy_to]}/shared/config"
 
   unless (workers = workers(application)).empty?
+    Chef::Log.info("Generating configuration and monitrc for #{workers} processes.")
     # Stop any processes that might be running before we setup
     include_recipe 'sidekiq::stop'
 

@@ -8,6 +8,7 @@ node[:deploy].each do |application, deploy|
 
   execute "restart Sidekiq [#{application}]" do
     command "sudo monit restart -g sidekiq_#{application}_group"
+    only_if { ::File.exists?("/etc/monit.d/sidekiq_#{application}.monitrc") }
   end
 end
 
