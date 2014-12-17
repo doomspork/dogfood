@@ -1,27 +1,19 @@
 include_recipe 'deploy'
+include_recipe 'sidekiq::quiet'
 
-node[:deploy].each do |application, deploy|
-  unless node[:sidekiq][application]
-    Chef::Log.debug("Skipping sidekiq::setup for #{application}, not configured for Sidekiq.")
-    next
-  end
+node['sidekiq'].each do |application, _|
+  deploy = node['deploy'][application]
 
   opsworks_deploy_dir do
-    user deploy[:user]
-    group deploy[:group]
-    path deploy[:deploy_to]
+    user deploy['user']
+    group deploy['group']
+    path deploy['deploy_to']
   end
-
-  include_recipe 'sidekiq::quiet'
-  include_recipe 'sidekiq::unmonitor'
-  include_recipe 'sidekiq::setup'
-
-  node.set[:opsworks][:rails_stack][:restart_command] = node[:sidekiq][application][:restart_command]
 
   opsworks_deploy do
     deploy_data deploy
     app application
   end
-
-  include_recipe 'sidekiq::restart'
 end
+
+include_recipe 'sidekiq::restart'

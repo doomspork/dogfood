@@ -1,12 +1,9 @@
-node[:deploy].each do |application, deploy|
-  unless node[:sidekiq][application]
-    Chef::Log.debug("Skipping sidekiq::quiet for #{application}, not configured for Sidekiq.")
-    next
-  end
+node['sidekiq'].each do |application, config|
+  deploy = node['deploy'][application]
 
-  workers(application).each do |worker, options|
-    processes = (options[:process_count] || 1)
-    pid_dir   = "#{deploy[:deploy_to]}/shared/pids"
+  configured_workers(config).each do |worker, options|
+    processes = (options['process_count'] || 1)
+    pid_dir   = "#{deploy['deploy_to']}/shared/pids"
 
     processes.times do |n|
       identifier = "#{application}-#{worker}#{n+1}"
@@ -15,7 +12,7 @@ node[:deploy].each do |application, deploy|
       execute "quiet Sidekiq process [#{identifier}]" do
         cwd pid_dir
         command "if kill -0 `cat #{pid_file}` > /dev/null 2>&1; then kill -s USR1 `cat #{pid_file}`; fi"
-        user deploy[:user]
+        user deploy['user']
 
         only_if { ::File.exists?(pid_file) }
       end

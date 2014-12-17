@@ -1,14 +1,8 @@
-include_recipe 'sidekiq::service'
+include_recipe 'deploy'
 
-node[:deploy].each do |application, deploy|
-  unless node[:sidekiq][application]
-    Chef::Log.debug("Skipping sidekiq::restart for #{application}, not configured for Sidekiq.")
-    next
-  end
-
+node['sidekiq'].each do |application, _|
   execute "restart Sidekiq [#{application}]" do
-    command "sudo monit restart -g sidekiq_#{application}_group"
+    command "sleep #{deploy['sleep_before_restart']} && sudo monit restart -g sidekiq_#{application}_group"
     only_if { ::File.exists?("/etc/monit.d/sidekiq_#{application}.monitrc") }
   end
 end
-
