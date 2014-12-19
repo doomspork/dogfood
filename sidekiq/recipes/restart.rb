@@ -1,10 +1,7 @@
-include_recipe 'deploy'
+include_recipe 'sidekiq::service'
 
 node['sidekiq'].each do |application, _|
-  deploy = node['deploy'][application]
-
-  execute "restart Sidekiq [#{application}]" do
-    command "sleep #{deploy['sleep_before_restart']} && sudo monit restart -g sidekiq_#{application}_group"
-    only_if { ::File.exists?("/etc/monit.d/sidekiq_#{application}.monitrc") }
+  service "Sidekiq #{application}" do
+    action :restart
   end
 end

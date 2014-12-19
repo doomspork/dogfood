@@ -1,6 +1,7 @@
+include_recipe 'sidekiq::service'
+
 node['sidekiq'].each do |application, _|
-  execute "unmonitor Sidekiq [#{application}]" do
-    command "sudo monit unmonitor -g sidekiq_#{application}_group"
-    only_if { ::File.exists?("/etc/monit.d/sidekiq_#{application}.monitrc") }
+  execute "unmonitor Sidekiq #{application}" do
+    action :run
   end
 end

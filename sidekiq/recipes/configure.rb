@@ -15,7 +15,7 @@ node['sidekiq'].each do |application, _|
     owner deploy['user']
     variables(:database => deploy['database'], :environment => deploy['rails_env'])
 
-    notifies :run, "execute[restart Rails app #{application}]", :delayed
+    notifies :run, "execute[restart Sidekiq #{application}", :delayed
 
     only_if do
       File.exists?(deploy_to) && File.exists?("#{deploy_to}/shared/config/")

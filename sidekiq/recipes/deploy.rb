@@ -1,7 +1,13 @@
 include_recipe 'deploy'
+include_recipe 'sidekiq::service'
 
 node['sidekiq'].each do |application, _|
   deploy = node['deploy'][application]
+
+  execute "quiet Sidekiq #{application}" do
+    action :run
+    notifies :run, "execute[unmonitor Sidekiq #{application}]", :immediately
+  end
 
   opsworks_deploy_dir do
     user deploy['user']
@@ -13,6 +19,8 @@ node['sidekiq'].each do |application, _|
     deploy_data deploy
     app application
   end
-end
 
-include_recipe 'sidekiq::restart'
+  service "Sidekiq #{application}" do
+    action :restart
+  end
+end

@@ -10,4 +10,3 @@ module Sidekiq
 end
 
 Chef::Recipe.send(:include, Sidekiq::Helpers)
-Chef::Resource::Template.send(:include, Sidekiq::Helpers)
