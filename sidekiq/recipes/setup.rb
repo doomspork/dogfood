@@ -48,7 +48,7 @@ node['sidekiq'].each do |application, config|
       syslog:       config['syslog'] || false,
       workers:      workers
     })
-    notifies :reload, 'service[monit]', :delayed
+    notifies :reload, 'service[monit]', :immediately
   end
 
 end
