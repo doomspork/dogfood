@@ -1,5 +1,4 @@
 include_recipe 'deploy'
-include_recipe 'sidekiq::quiet'
 
 node['sidekiq'].each do |application, _|
   deploy = node['deploy'][application]

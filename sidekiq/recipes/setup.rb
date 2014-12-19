@@ -1,5 +1,4 @@
 include_recipe 'sidekiq::service'
-include_recipe 'sidekiq::stop'
 
 node['sidekiq'].each do |application, config|
   deploy = node['deploy'][application]

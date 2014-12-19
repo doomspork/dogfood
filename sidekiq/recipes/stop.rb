@@ -1,5 +1,4 @@
 include_recipe 'sidekiq::service'
-include_recipe 'sidekiq::quiet'
 
 node['sidekiq'].each do |application, _|
   execute "stop Sidekiq [#{application}]" do
