@@ -6,15 +6,17 @@ end
 node['sidekiq'].each do |application, config|
   deploy = node['deploy'][application]
 
+  sleep_before_monit = 10
+
   service "Sidekiq #{application}" do
     supports status: false, reload: false, restart: true
-    restart_command "sleep #{deploy['sleep_before_restart']} && sudo monit restart -g sidekiq_#{application}_group"
-    stop_command "sleep #{deploy['sleep_before_restart']} && sudo monit stop -g sidekiq_#{application}_group"
+    restart_command "sleep #{sleep_before_monit} && sudo monit restart -g sidekiq_#{application}_group"
+    stop_command "sleep #{sleep_before_monit} && sudo monit stop -g sidekiq_#{application}_group"
     action :nothing
   end
 
   execute "unmonitor Sidekiq #{application}" do
-    command "sleep #{deploy['sleep_before_restart']} && sudo monit unmonitor -g sidekiq_#{application}_group"
+    command "sleep #{sleep_before_monit} && sudo monit unmonitor -g sidekiq_#{application}_group"
     only_if { ::File.exists?("/etc/monit.d/sidekiq_#{application}.monitrc") }
     action :nothing
   end
