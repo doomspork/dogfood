@@ -3,6 +3,8 @@ maintainer_email 'sean@cityleash.com'
 license          'MIT'
 description      'Configure and deploy Sidekiq 3 on AWS OpsWorks.'
 
+depends 'deploy'
+
 name   'sidekiq'
 recipe 'sidekiq::configure',  'Configure Sidekiq worker.'
 recipe 'sidekiq::deploy',     'Deploy Sidekiq worker.'
@@ -12,4 +14,3 @@ recipe 'sidekiq::setup',      'Set up Sidekiq worker.'
 recipe 'sidekiq::stop',       'Stop Sidekiq worker.'
 recipe 'sidekiq::undeploy',   'Undeploy Sidekiq worker.'
 recipe 'sidekiq::unmonitor',  'Unmonitor Sidekiq processes in monit.'
-

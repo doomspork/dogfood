@@ -1,16 +1,9 @@
-include_recipe 'deploy'
+node['sidekiq'].each do |application, _|
+  deploy = node['deploy'][application]
 
-node[:deploy].each do |application, deploy|
-  unless node[:sidekiq][application]
-    Chef::Log.debug("Skipping sidekiq::setup for #{application}, not configured for Sidekiq.")
-    next
-  end
-
-  directory deploy[:deploy_to] do
+  directory deploy['deploy_to'] do
     recursive true
     action :delete
-    only_if do
-      File.exists?(deploy[:deploy_to])
-    end
+    only_if { ::File.exists?(deploy['deploy_to']) }
   end
 end
