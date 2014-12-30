@@ -28,7 +28,7 @@ node['sidekiq'].each do |application, config|
     config = options['config'] ? options['config'].to_hash : {}
 
     (options[:process_count] || 1).times do |n|
-      template "#{config_directory}/sidekiq_#{worker}#{n+1}.yml" do
+      template "#{config_directory}/#{application}-#{worker}#{n+1}.yml" do
         owner node['owner_name']
         group node['owner_name']
         mode 0644
