@@ -25,7 +25,7 @@ node['sidekiq'].each do |application, config|
   sidekiq_processes = []
   configured_workers(config).each do |worker, opts|
     (opts['process_count'] || 1).times do |n|
-      pid_file = File.join(pid_dir, "sidekiq_#{application}-#{worker}#{n+1}.pid")
+      pid_file = File.join(pid_dir, "#{application}-#{worker}#{n+1}.pid")
       sidekiq_processes.push([pid_file, "if kill -0 `cat #{pid_file}` > /dev/null 2>&1; then kill -s USR1 `cat #{pid_file}`; fi"])
     end
   end
