@@ -6,7 +6,10 @@ node['sidekiq'].each do |application, _|
 
   execute "quiet Sidekiq #{application}" do
     action :run
-    notifies :run, "execute[unmonitor Sidekiq #{application}]", :immediately
+  end
+
+  execute "unmonitor Sidekiq #{application}" do
+    action :run
   end
 
   opsworks_deploy_dir do
@@ -20,7 +23,9 @@ node['sidekiq'].each do |application, _|
     app application
   end
 
-  service "Sidekiq #{application}" do
-    action :restart
+  ruby_block "bundle Sidekiq #{application}" do
+   block do
+     OpsWorks::RailsConfiguration.bundle(application, deploy, "#{deploy[:deploy_to]}/current")
+   end
   end
 end

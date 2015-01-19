@@ -15,11 +15,12 @@ node['sidekiq'].each do |application, _|
     owner deploy['user']
     variables(:database => deploy['database'], :environment => deploy['rails_env'])
 
-    notifies :restart, "service[Sidekiq #{application}]", :delayed
-
     only_if do
       File.exists?(deploy_to) && File.exists?("#{deploy_to}/shared/config/")
     end
   end
 
+  service "Sidekiq #{application}" do
+    action :restart
+  end
 end
