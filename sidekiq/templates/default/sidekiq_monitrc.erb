@@ -3,12 +3,11 @@
   <% identifier = "#{@application}-#{worker}#{n+1}" %>
   <% conf_file = "#{@deploy[:deploy_to]}/shared/config/#{identifier}.yml" %>
   <% pid_file = "#{@deploy[:deploy_to]}/shared/pids/#{identifier}.pid" %>
-  <% syslog = @syslog ? "2>&1 | logger -t #{identifier}" : '' %>
   <% env_vars = @environment.map { |k, v| "#{k}=#{v}" }.join(' ') %>
 
 check process <%= identifier %>
   with pidfile <%= pid_file %>
-start program = "/bin/su - <%= @deploy[:user] %> -c 'cd <%= @deploy[:current_path] %> && RAILS_ENV=<%= @deploy[:rails_env] %> <%= env_vars %> bundle exec sidekiq -C <%= conf_file %> -P <%= pid_file %> <%= syslog %>'" with timeout 90 seconds
+start program = "/bin/su - <%= @deploy[:user] %> -c 'cd <%= @deploy[:current_path] %> && RAILS_ENV=<%= @deploy[:rails_env] %> <%= env_vars %> bundle exec sidekiq -C <%= conf_file %> -P <%= pid_file %> 2>&1 | logger -t <%= identifier %>'" with timeout 90 seconds
   stop  program = "/bin/su - <%= @deploy[:user] %> -c 'kill -s TERM `cat <%= pid_file %>`'" with timeout 90 seconds
   group sidekiq_<%= @application %>_group
 
