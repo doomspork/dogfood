@@ -17,7 +17,6 @@ node['sidekiq'].each do |application, config|
 
   execute "unmonitor Sidekiq #{application}" do
     command "sleep #{sleep_before_monit} && sudo monit unmonitor -g sidekiq_#{application}_group"
-    only_if { ::File.exists?("/etc/monit.d/sidekiq_#{application}.monitrc") }
     action :nothing
   end
 
@@ -34,7 +33,6 @@ node['sidekiq'].each do |application, config|
     cwd pid_dir
     command sidekiq_processes.map(&:last).join('&&')
     user deploy['user']
-
-    only_if { sidekiq_processes.all? { |pid_file, _| ::File.exists?(pid_file) } }
+    action :nothing
   end
 end

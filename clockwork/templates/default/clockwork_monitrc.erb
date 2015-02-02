@@ -1,0 +1,9 @@
+<% pid_dir = "#{@deploy[:deploy_to]}/shared/pids" %>
+<% log_dir = "#{@deploy[:deploy_to]}/shared/logs" %>
+<% command = "cd #{@deploy['current_path']} && RAILS_ENV=#{@deploy['rails_env']} bundle exec clockworkd --identifier=#{@name} --pid-dir=#{pid_dir} --log --log-dir=#{log_dir} --clock=#{@clock}.rb" %>
+
+check process <%= @name %>
+  with pidfile <%= "#{pid_dir}/clockworkd.#{@name}.pid" %>
+  start program = "<%= "/bin/su - #{@deploy['user']} -c '#{command} start'" %>" with timeout 90 seconds
+  stop program = "<%= "/bin/su - #{@deploy['user']} -c '#{command} stop'" %>" with timeout 90 seconds
+  group <%= @name %>

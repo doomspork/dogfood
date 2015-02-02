@@ -18,9 +18,7 @@ node['sidekiq'].each do |application, _|
     only_if do
       File.exists?(deploy_to) && File.exists?("#{deploy_to}/shared/config/")
     end
-  end
 
-  service "Sidekiq #{application}" do
-    action :restart
+    notifies :restart, "service[Sidekiq #{application}]", :delayed
   end
 end

@@ -45,7 +45,7 @@ node['sidekiq'].each do |application, config|
       application:  application,
       deploy:       deploy,
       environment:  OpsWorks::Escape.escape_double_quotes(deploy['environment_variables']),
-      syslog:       config['syslog'] || false,
+      syslog:       config['syslog'] || true,
       workers:      workers
     })
     notifies :reload, 'service[monit]', :immediately
