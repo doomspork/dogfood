@@ -4,6 +4,7 @@ service 'monit' do
 end
 
 application = node['clockwork']['application']
+clock       = node['clockwork']['file'] || 'clock.rb'
 deploy      = node['deploy'][application]
 host        = node['clockwork']['hostname']
 name        = node['clockwork']['name'] || application
@@ -17,6 +18,7 @@ template "/etc/monit.d/clockwork_#{name}.monitrc" do
   mode 0644
   source 'clockwork_monitrc.erb'
   variables({
+    clock: clock,
     deploy: deploy,
     name:   "clockwork_#{name}"
   })
