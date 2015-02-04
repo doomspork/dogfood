@@ -1,6 +1,7 @@
-<% pid_dir = "#{@deploy[:deploy_to]}/shared/pids" %>
-<% log_dir = "#{@deploy[:deploy_to]}/shared/logs" %>
-<% command = "cd #{@deploy['current_path']} && RAILS_ENV=#{@deploy['rails_env']} bundle exec clockworkd --identifier=#{@name} --pid-dir=#{pid_dir} --log --log-dir=#{log_dir} --clock=#{@clock}" %>
+<% pid_dir  = "#{@deploy[:deploy_to]}/shared/pids" %>
+<% log_dir  = "#{@deploy[:deploy_to]}/shared/log" %>
+<% env_vars = @environment.map { |k, v| "#{k}=#{v}" }.join(' ') %>
+<% command  = "cd #{@deploy['current_path']} && RAILS_ENV=#{@deploy['rails_env']} #{env_vars} bundle exec clockworkd --identifier=#{@name} --pid-dir=#{pid_dir} --log --log-dir=#{log_dir} --clock=#{@clock}" %>
 
 check process <%= @name %>
   with pidfile <%= "#{pid_dir}/clockworkd.#{@name}.pid" %>
