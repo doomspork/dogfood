@@ -1,10 +1,19 @@
 require 'chefspec'
 
 describe 'clockwork::setup' do
+  module OpsWorks
+    module Escape
+      def self.escape_double_quotes(val)
+        val
+      end
+    end
+  end
+
   let(:application) { 'example_application' }
   let(:file)        { 'different_clockfile.rb' }
   let(:hostname)    { 'chefspec' } # Pre-populated by Chefspec
   let(:name)        { 'example_scheduling' }
+  let(:deploy)      { { 'environment_variables' => {} } }
 
   let(:chef_run) do
     ChefSpec::SoloRunner.new do |node|
@@ -12,7 +21,7 @@ describe 'clockwork::setup' do
       node.set['clockwork']['file']        = file
       node.set['clockwork']['hostname']    = hostname
       node.set['clockwork']['name']        = name
-      node.set['deploy'][application]      = {}
+      node.set['deploy'][application]      = deploy
     end.converge(described_recipe)
   end
 
@@ -23,7 +32,8 @@ describe 'clockwork::setup' do
     expect(chef_run).to create_template(path).with(
       variables: {
         clock: file,
-        deploy: {},
+        deploy: deploy,
+        environment: {},
         name: "clockwork_#{name}"
       }
     )
@@ -40,7 +50,8 @@ describe 'clockwork::setup' do
       expect(chef_run).to create_template(path).with(
         variables: {
           clock: 'clock.rb',
-          deploy: {},
+          deploy: deploy,
+          environment: {},
           name: "clockwork_#{application}"
         }
       )

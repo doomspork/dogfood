@@ -20,7 +20,8 @@ template "/etc/monit.d/clockwork_#{name}.monitrc" do
   variables({
     clock: clock,
     deploy: deploy,
-    name:   "clockwork_#{name}"
+    environment: OpsWorks::Escape.escape_double_quotes(deploy['environment_variables']),
+    name: "clockwork_#{name}"
   })
   notifies :reload, 'service[monit]', :immediately
   notifies :run, 'execute[clockwork-restart]', :delayed
