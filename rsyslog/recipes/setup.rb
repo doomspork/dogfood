@@ -1,8 +1,16 @@
-node['rsyslog']['remotes'].each do |name, url|
+DEFAULT_FILTERS = {
+  'selector' => '*.*',
+  'property' => []
+}
+
+node['rsyslog']['remotes'].each do |name, options|
+  url = options['url']
+  filters = DEFAULT_FILTERS.merge(options['filters'] || {})
+
   template "/etc/rsyslog.d/#{name}.conf" do
     mode 0644
     source 'rsyslog.conf.erb'
-    variables remote: url
+    variables filters: filters, remote: url
   end
 end
 
