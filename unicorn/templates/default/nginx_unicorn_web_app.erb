@@ -63,6 +63,14 @@ server {
   location = /500.html {
     root <%= @application[:absolute_document_root] %>;
   }
+
+  # Cross domain webfont access
+  location ~* \.(?:ttf|ttc|otf|eot|woff|font.css)$ {
+    add_header "Access-Control-Allow-Origin" "*";
+    expires 1M;
+    access_log off;
+    add_header Cache-Control "public";
+  }
 }
 
 <% if @application[:ssl_support] %>
@@ -70,7 +78,7 @@ server {
   listen   443;
   server_name <%= @application[:domains].join(" ") %> <%= node[:hostname] %>;
   access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>-ssl.access.log;
-  
+
   ssl on;
   ssl_certificate /etc/nginx/ssl/<%= @application[:domains].first %>.crt;
   ssl_certificate_key /etc/nginx/ssl/<%= @application[:domains].first %>.key;
