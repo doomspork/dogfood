@@ -4,14 +4,6 @@ include_recipe 'sidekiq::service'
 node['sidekiq'].each do |application, _|
   deploy = node['deploy'][application]
 
-  execute "quiet Sidekiq #{application}" do
-    action :run
-  end
-
-  execute "unmonitor Sidekiq #{application}" do
-    action :run
-  end
-
   opsworks_deploy_dir do
     user deploy['user']
     group deploy['group']
